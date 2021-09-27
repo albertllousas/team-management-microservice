@@ -5,8 +5,8 @@
 Team management service is a production ready and fully tested service that can be used as a template for a microservice 
 development.
 
-Keywords: `microservice`, `kotlin`, `Hexagonal-Architecture`, `Domain-Driven Design`, `functional programming`, `Testing`, 
-`Event-Driven Architecure`, `Domain events`, `Kafka`, `spring-boot`, `PostgreSQL`, `Transactional-outbox`
+Keywords: `microservice`, `kotlin`, `Hexagonal-Architecture`, `SOLID`, `Domain-Driven Design`, `functional-programming`, 
+`Testing`, `Event-Driven Architecture`, `Domain-Events`, `Kafka`, `spring-boot`, `PostgreSQL`, `Transactional-outbox`
 
 ## Overview
 
