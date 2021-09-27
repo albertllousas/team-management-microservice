@@ -1,0 +1,113 @@
+server:
+  port: 8080
+  undertow:
+    eager-filter-init: true
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /management
+      exposure:
+        include:
+          - info
+          - health
+          - metrics
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+      show-details: always
+    metrics:
+      enabled: true
+  health:
+    db:
+      enabled: false
+  metrics:
+    export:
+      statsd:
+        host: "172.17.0.1"
+    enable:
+      all: true
+
+info:
+  app:
+    java:
+      source: '11'
+      target: '11'
+
+spring:
+  application:
+    name: 'team-mgmt-service'
+  main:
+    banner-mode: 'off'
+  mvc:
+    favicon:
+      enabled: false
+  kafka:
+    error-handling:
+      exponential-backoff:
+        max-elapsed-time: 30000
+        multiplier: 1.5
+        initial-interval: 100
+    consumer:
+      people:
+        group-id: team-mgmt-service-consumer
+        topic: public.person.v1
+      bootstrap-servers: localhost:9092
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      auto-offset-reset: earliest
+    producer:
+      team:
+        topic: public.team.v1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+    properties:
+      security.protocol: PLAINTEXT
+  datasource:
+    url: jdbc:postgresql://localhost:5432/teammgmt
+    username: teammgmt
+    password: teammgmt
+  flyway:
+    url: jdbc:postgresql://localhost:5432/teammgmt
+    schemas: public
+    user: teammgmt
+    password: teammgmt
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+
+swagger:
+  enabled: true
+  title: team-mgmt-service
+  description: Internal Payment service
+  version: 0.0.1
+
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 2
+      slidingWindowType: TIME_BASED
+      permittedNumberOfCallsInHalfOpenState: 3
+      minimumNumberOfCalls: 10
+      waitDurationInOpenState: 30s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      slowCallDurationThreshold: 1s
+      recordExceptions:
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+  instances:
+    people-service:
+      baseConfig: default
+clients:
+  people-service:
+    url: https://people-service.service.consul
+    connectTimeoutMillis: 3000
+    readTimeoutMillis: 3000

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[team-mgmt-service] [%date{ISO8601}{UTC}Z] [%level] [%thread] [%logger] %message%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.teammgmt" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
