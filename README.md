@@ -22,8 +22,10 @@ Keywords: `microservice`, `kotlin`, `Hexagonal-Architecture`, `SOLID`, `Domain-D
 
 ### Use-case diagram
 
+Example of how a use-case looks like:
+
 <p align="center">
-  <img width="100%" src="./team-mgmt-service-Page-2.png">
+  <img width="100%" src="./use-case.png">
 </p>
 
 
@@ -50,5 +52,4 @@ some architectural constraints:
 In order to avoid [dual writes](https://thorben-janssen.com/dual-writes/) the project uses a couple of patterns:
 - [transactional-outbox](https://microservices.io/patterns/data/transactional-outbox.html)
 - [polling-publisher](https://microservices.io/patterns/data/polling-publisher.html)
-
 
