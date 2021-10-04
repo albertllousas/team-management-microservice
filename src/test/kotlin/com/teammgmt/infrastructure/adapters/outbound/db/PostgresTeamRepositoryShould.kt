@@ -69,7 +69,7 @@ class PostgresTeamRepositoryShould {
             ) { it, _ ->
                 assertThat(it.getString("id")).isEqualTo(team.teamId.value.toString())
                 assertThat(it.getString("name")).isEqualTo(team.teamName.value)
-                assertThat(it.getString("members")).isEqualTo("")
+                assertThat(it.getString("members")).isEqualTo("{}")
             }
         }
 
@@ -87,7 +87,7 @@ class PostgresTeamRepositoryShould {
             ) { it, _ ->
                 assertThat(it.getString("id")).isEqualTo(team.teamId.value.toString())
                 assertThat(it.getString("name")).isEqualTo(updatedTeam.teamName.value)
-                assertThat(it.getString("members")).isEqualTo("")
+                assertThat(it.getString("members")).isEqualTo("{}")
             }
         }
 
