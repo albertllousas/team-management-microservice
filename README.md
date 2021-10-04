@@ -52,4 +52,3 @@ some architectural constraints:
 In order to avoid [dual writes](https://thorben-janssen.com/dual-writes/) the project uses a couple of patterns:
 - [transactional-outbox](https://microservices.io/patterns/data/transactional-outbox.html)
 - [polling-publisher](https://microservices.io/patterns/data/polling-publisher.html)
-

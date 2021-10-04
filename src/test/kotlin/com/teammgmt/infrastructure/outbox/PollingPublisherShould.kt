@@ -1,9 +1,6 @@
-package com.teammgmt.infrastructure.adapters.outbox
+package com.teammgmt.infrastructure.outbox
 
 import com.teammgmt.fixtures.buildOutboxEvent
-import com.teammgmt.infrastructure.outbox.KafkaOutboxEventProducer
-import com.teammgmt.infrastructure.outbox.PollingPublisher
-import com.teammgmt.infrastructure.outbox.PostgresOutboxEventRepository
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
@@ -19,6 +16,10 @@ import org.testcontainers.shaded.org.awaitility.Awaitility.await
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.full.findAnnotation
+import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.TransactionDefinition
+import org.springframework.transaction.TransactionStatus
+import org.springframework.transaction.support.SimpleTransactionStatus
 
 class PollingPublisherShould {
 
@@ -34,6 +35,12 @@ class PollingPublisherShould {
 
     private val threadPoolTaskScheduler: ThreadPoolTaskScheduler = ThreadPoolTaskScheduler()
 
+    private val transactionManager = spyk(object : PlatformTransactionManager {
+        override fun getTransaction(definition: TransactionDefinition?): TransactionStatus = SimpleTransactionStatus()
+        override fun rollback(status: TransactionStatus) {}
+        override fun commit(status: TransactionStatus) {}
+    })
+
     init {
         threadPoolTaskScheduler.also { it.initialize() }
         PollingPublisher(
@@ -41,6 +48,7 @@ class PollingPublisherShould {
             kafkaOutboxEventProducer = kafkaOutboxEventProducer,
             pollingIntervalMs = 50,
             scheduler = taskScheduler,
+            transactionManager = transactionManager,
             batchSize = 5,
             meterRegistry = meterRegistry,
             logger = logger
@@ -59,15 +67,8 @@ class PollingPublisherShould {
 
         verify(timeout = 2000) {
             kafkaOutboxEventProducer.send(listOf(outboxEvent))
+            transactionManager.commit(any())
         }
-    }
-
-    @Test
-    fun `ensure transactionality and rollback for any exception`() {
-        val function = PollingPublisher::publish as KAnnotatedElement
-        val findAnnotation = function.findAnnotation<Transactional>()
-        assertThat(findAnnotation).isNotNull
-        assertThat(findAnnotation!!.rollbackFor.asList()).isEqualTo(listOf(Exception::class))
     }
 
     @Test
@@ -78,7 +79,8 @@ class PollingPublisherShould {
         every { kafkaOutboxEventProducer.send(listOf(outboxEvent)) } throws crash
 
         verify(timeout = 2000) {
-            logger.error("Message publishing failed", crash)
+            logger.error("Message batch publishing failed, will be retried", crash)
+            transactionManager.rollback(any())
         }
         await().atMost(2, TimeUnit.SECONDS).untilAsserted {
             assertThat(meterRegistry.counter("outbox.publishing.fail").count()).isGreaterThan(1.0)

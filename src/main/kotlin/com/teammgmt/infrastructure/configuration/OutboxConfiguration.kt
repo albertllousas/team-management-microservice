@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.transaction.PlatformTransactionManager
 
 @EnableScheduling
 @Configuration
@@ -29,12 +30,14 @@ class OutboxConfiguration {
     fun pollingPublisher(
         transactionalOutbox: TransactionalOutbox,
         kafkaOutboxEventProducer: KafkaOutboxEventProducer,
+        platformTransactionManager: PlatformTransactionManager,
         taskScheduler: TaskScheduler,
         meterRegistry: MeterRegistry
     ) = PollingPublisher(
         transactionalOutbox = transactionalOutbox,
         kafkaOutboxEventProducer = kafkaOutboxEventProducer,
         batchSize = 10,
+        transactionManager = platformTransactionManager,
         pollingIntervalMs = 1000,
         scheduler = taskScheduler,
         meterRegistry = meterRegistry

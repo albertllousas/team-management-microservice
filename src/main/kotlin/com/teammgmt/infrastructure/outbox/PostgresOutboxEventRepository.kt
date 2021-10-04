@@ -26,6 +26,7 @@ open class PostgresOutboxEventRepository(
         )
     }
 
+    @Transactional(propagation = MANDATORY)
     override fun findReadyForPublishing(batchSize: Int): List<OutboxEvent> = try {
         jdbcTemplate.query(
             """

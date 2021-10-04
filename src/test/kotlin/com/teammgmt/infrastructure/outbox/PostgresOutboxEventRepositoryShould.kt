@@ -1,9 +1,7 @@
-package com.teammgmt.infrastructure.adapters.outbox
+package com.teammgmt.infrastructure.outbox
 
 import com.teammgmt.Postgres
 import com.teammgmt.fixtures.buildOutboxEvent
-import com.teammgmt.infrastructure.outbox.OutboxEvent
-import com.teammgmt.infrastructure.outbox.PostgresOutboxEventRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay

@@ -1,11 +1,10 @@
-package com.teammgmt.infrastructure.adapters.outbox
+package com.teammgmt.infrastructure.outbox
 
 import com.teammgmt.Kafka
 import com.teammgmt.fixtures.buildKafkaConsumer
 import com.teammgmt.fixtures.buildKafkaProducer
 import com.teammgmt.fixtures.buildOutboxEvent
 import com.teammgmt.fixtures.consumeAndAssert
-import com.teammgmt.infrastructure.outbox.KafkaOutboxEventProducer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
