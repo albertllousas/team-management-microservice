@@ -18,7 +18,7 @@ import java.time.LocalDateTime.now
 
 @Tag("acceptance")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-class DeleteTeamMemberToTeamShould : BaseAcceptanceTest() {
+class DeleteTeamMemberFromTeamShould : BaseAcceptanceTest() {
 
     @Test
     fun `delete a team member to a team successfully`() {

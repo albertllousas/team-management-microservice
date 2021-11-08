@@ -22,7 +22,7 @@ import kotlin.streams.toList
 class PostgresTeamRepository(private val jdbcTemplate: JdbcTemplate) : TeamRepository {
 
     override fun find(teamId: TeamId): Either<TeamNotFound, Team> = try {
-        jdbcTemplate.queryForObject(""" SELECT id, name, members FROM team WHERE id = ? """, teamId.value) { rs, _ -> rs.asTeam() }.right()
+        jdbcTemplate.queryForObject(""" SELECT id, name, members FROM team WHERE id = ? FOR UPDATE """, teamId.value) { rs, _ -> rs.asTeam() }.right()
     } catch (exception: EmptyResultDataAccessException) {
         TeamNotFound.left()
     }

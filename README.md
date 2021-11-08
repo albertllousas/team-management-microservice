@@ -77,3 +77,54 @@ Why not to publish our domain events directly? We can not publish our domain eve
 
 Here the [contracts](/src/main/kotlin/com/teammgmt/infrastructure/adapters/outbound/event/IntegrationTeamEvents.kt)
 
+# Error handling
+
+- recoverable: Domain (Eithers)
+- Not recoverable: Let it crash (Exceptions, capture and deal with them at the boundary of the app)
+
+boundary errors (shit happens)
+kafka retries
+
+where are the metrics! boundary monitoring
+
+Diagram testing
+
+testing strategy
+
+diagram usecases etc ...
+
+Flyway
+
+
+What about reading entrypoint???????? events, compacted topic!!! 
+
+## tech-stack
+spring boot
+undertow (nio)
+kafka
+postgresql
+kotlin
+arrow
+BBDD: postgresql, flyway, jdbctemplate
+
+## DDD patterns
+aggregate
+
+-tactical ddd
+- ddd related patterns
+- domain events
+  domaineventpublisher
+  outbox, simple implementation explain and links (copy from Tn or check history).
+  dual writes (logs, metrics is ok), kafka no:
+  https://github.com/n26/spring-transactional-outbox
+
+eventual consistency
+
+eda:
+- dual writes
+- DLQ
+- tombstones
+- Error handling Kafka : backoff, retries and error handling (revover)
+- Replication, fallback when lag more than 5 min ?
+- dual writes
+
