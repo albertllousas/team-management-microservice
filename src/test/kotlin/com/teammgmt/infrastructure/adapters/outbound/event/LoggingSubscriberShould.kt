@@ -8,6 +8,7 @@ import com.teammgmt.fixtures.buildPerson
 import com.teammgmt.fixtures.buildTeam
 import io.mockk.spyk
 import io.mockk.verify
+import org.junit.jupiter.api.Test
 import org.slf4j.helpers.NOPLogger
 
 class LoggingSubscriberShould {
@@ -16,6 +17,7 @@ class LoggingSubscriberShould {
 
     private val loggingDomainEventSubscriber = LoggingSubscriber(logger)
 
+    @Test
     fun `log a team created event`() {
         val teamCreated = TeamCreated(buildTeam())
 
@@ -28,6 +30,7 @@ class LoggingSubscriberShould {
         }
     }
 
+    @Test
     fun `log a team member joined event`() {
         val person = buildPerson()
         val team = buildTeam(members = setOf(TeamMember(person.personId)))
@@ -42,6 +45,7 @@ class LoggingSubscriberShould {
         }
     }
 
+    @Test
     fun `log a team member left event`() {
         val person = buildPerson()
         val team = buildTeam(members = setOf(TeamMember(person.personId)))

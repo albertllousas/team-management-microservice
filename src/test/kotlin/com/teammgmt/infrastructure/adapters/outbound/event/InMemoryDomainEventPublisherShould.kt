@@ -5,9 +5,11 @@ import com.teammgmt.domain.model.TeamCreated
 import com.teammgmt.fixtures.buildTeam
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Test
 
 class InMemoryDomainEventPublisherShould {
 
+    @Test
     fun `forward domain event to subscribers`() {
         val event = TeamCreated(buildTeam())
         val firstSubscriber = mockk<DomainEventSubscriber>(relaxed = true)
